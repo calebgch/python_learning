@@ -1,0 +1,8 @@
+#该文件保存用户名密码，形式：用户名,密码
+#用户名与密码两边不允许有空格。
+#如果配置成"usera , password   "，则认为用户名为usera，密码为password
+#如果配置成"user a,pass word"，则认为用户名为user a，密码为pass word
+#符号#为注释行
+
+user,password
+usera,passw0rd
