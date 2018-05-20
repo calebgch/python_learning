@@ -1,7 +1,12 @@
-class Student(object):
+from account import Account
 
-    def __init__(self):
-        pass
+
+class Student(Account):
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+        self.type = 'Student'
 
     def register_class(self):
         pass
@@ -9,6 +14,7 @@ class Student(object):
     def get_courses(self):
         pass
 
-
+    def do_command(self, command):
+        pass
 
 

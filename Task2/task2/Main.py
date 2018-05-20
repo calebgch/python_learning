@@ -1,13 +1,15 @@
-import pickle
 import data
-from auth import Auth
+from user_data import UserData
 from account import Account
+from admin import Admin
+from teacher import Teacher
+from student import Student
 
 
 def init():
-    admin = Account('admin', 'passw0rd', 'Admin')
-    teacher = Account('teacher', 'passw0rd', 'Teacher')
-    student = Account('student', 'passw0rd', 'Student')
+    admin = Admin('admin', 'passw0rd')
+    teacher = Teacher('teacher', 'passw0rd')
+    student = Student('student', 'passw0rd')
     user_list = [admin, teacher, student]
     data.save('user', user_list)
 
@@ -15,7 +17,7 @@ def init():
 def login():
     username = input("输入用户名:")
     password = input("输入密码:")
-    return auth.login(username, password)
+    return user_data.login(username, password)
 
 
 def print_help(type):
@@ -39,7 +41,7 @@ def print_help(type):
 
 if __name__ == "__main__":
     init()
-    auth = Auth()
+    user_data = UserData()
     command = ""
 
     account = login()
@@ -50,9 +52,12 @@ if __name__ == "__main__":
     while command != "quit" and command != "exit":
         command = input(">>")
         if command == 'help':
-            print_help(account.type)
+            account.help()
+            #print_help(account.type)
 
         print("command: "+command)
+        account.do_command(command)
+
 
 
 
