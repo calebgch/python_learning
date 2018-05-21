@@ -19,13 +19,14 @@ class Admin(Account):
               'add course #添加课程\n'
               'del course #删除课程\n'
               'add teacher #添加老师\n'
-              'del teacher #删除老师\n')
+              'del teacher #删除老师\n'
+              'show user #显示用户')
 
     def do_command(self, command):
         if command == 'add user':
             self.add_user()
         elif command == 'del user':
-            pass
+            self.del_user()
         elif command == 'add school':
             pass
         elif command == 'del school':
@@ -38,20 +39,31 @@ class Admin(Account):
             pass
         elif command == 'del teacher':
             pass
+        elif command == 'show user':
+            self.show_user()
 
     def add_user(self):
         new_username = input("输入新用户名:")
         new_password = input("输入密码:")
         new_type = input("输入用户类型:")
         account = self.create_account(new_username, new_password, new_type)
-        self.data_set.add_account2(account)
+        ds = Data()
+        ds.add_account(account)
+        #self.data_set.add_account(account)
 
     def del_user(self):
+        ds = Data()
         username = input("输入要删除的用户名:")
-        if self.data_set.del_account(username):
+        #if self.data_set.del_account(username):
+        if ds.del_account(username):
             print('用户删除成功')
         else:
             print('用户删除失败')
+
+    def show_user(self):
+        #self.data_set.show_account()
+        ds = Data()
+        ds.show_account()
 
     def create_account(self, username, password, type):
         if type == 'Admin' or type == 'A':

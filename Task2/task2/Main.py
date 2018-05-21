@@ -8,10 +8,11 @@ data = Data()
 
 def init():
     admin = Admin('admin', 'passw0rd')
-    teacher = Teacher('teacher', 'passw0rd')
-    student = Student('student', 'passw0rd')
-    user_list = [admin, teacher, student]
+    #teacher = Teacher('teacher', 'passw0rd')
+    #student = Student('student', 'passw0rd')
+    user_list = [admin]
     data.save('user', user_list)
+    data.save('data', [[], [], []])
 
 
 def login():
@@ -21,7 +22,7 @@ def login():
 
 
 if __name__ == "__main__":
-    init()
+    #init()
     command = ""
 
     account = login()
