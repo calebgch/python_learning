@@ -17,4 +17,8 @@ class Student(Account):
     def do_command(self, command):
         pass
 
+    def help(self):
+        print('register course #报名课程\n'
+              'quit course #退出课程\n')
+
 

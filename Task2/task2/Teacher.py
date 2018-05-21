@@ -22,3 +22,7 @@ class Teacher(Account):
     def do_command(self, command):
         pass
 
+    def help(self):
+        print('show course #查看教授课程\n'
+              'show student #查看学生\n'
+              'show score #查看学生成绩\n')
