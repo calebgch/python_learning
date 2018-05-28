@@ -121,6 +121,12 @@ class Admin(Account):
         for account in user_list:
             print(account.username, account.passowrd, account.type)
 
+    def add_teacher(self):
+        pass
+    def del_teacher(self):
+        pass
+    def show_teacher(self):
+        pass
 
 class Teacher(Account):
     def __init__(self, username, password):
