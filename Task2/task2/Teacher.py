@@ -6,6 +6,7 @@ class Teacher(Account):
         self.username = username
         self.password = password
         self.type = 'Teacher'
+        self.school = ''
 
     def show_students(self, course):
         pass
@@ -26,3 +27,6 @@ class Teacher(Account):
         print('show course #查看教授课程\n'
               'show student #查看学生\n'
               'show score #查看学生成绩\n')
+
+    def set_school(self, school):
+        self.school = school

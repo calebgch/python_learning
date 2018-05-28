@@ -1,7 +1,8 @@
 from account import Account
 from teacher import Teacher
 from student import Student
-from data import Data
+
+import dataset
 
 
 class Admin(Account):
@@ -9,7 +10,7 @@ class Admin(Account):
         self.username = username
         self.password = password
         self.type = 'Admin'
-        self.data_set = Data()
+        #self.data_set = Data()
 
     def help(self):
         print('add user #添加用户\n'
@@ -41,15 +42,20 @@ class Admin(Account):
             pass
         elif command == 'show user':
             self.show_user()
+        elif command == 'reset':
+            self.reset()
+
+    def reset(self):
+        dataset.init()
 
     def add_user(self):
         new_username = input("输入新用户名:")
         new_password = input("输入密码:")
         new_type = input("输入用户类型:")
         account = self.create_account(new_username, new_password, new_type)
-        ds = Data()
-        ds.add_account(account)
-        #self.data_set.add_account(account)
+        #ds = Data()
+        #ds.add_account(account)
+        dataset.add_account(account)
 
     def del_user(self):
         ds = Data()
@@ -62,8 +68,11 @@ class Admin(Account):
 
     def show_user(self):
         #self.data_set.show_account()
-        ds = Data()
-        ds.show_account()
+        #ds = Data()
+        #ds.show_account()
+        list = dataset.user_list()
+        for account in list:
+            print(account.username)
 
     def create_account(self, username, password, type):
         if type == 'Admin' or type == 'A':

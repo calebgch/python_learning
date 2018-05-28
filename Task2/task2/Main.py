@@ -1,28 +1,20 @@
 from data import Data
-from admin import Admin
-from teacher import Teacher
-from student import Student
+#from admin import Admin
+#from teacher import Teacher
+#from student import Student
+from account import Account
 
-data = Data()
-
-
-def init():
-    admin = Admin('admin', 'passw0rd')
-    #teacher = Teacher('teacher', 'passw0rd')
-    #student = Student('student', 'passw0rd')
-    user_list = [admin]
-    data.save('user', user_list)
-    data.save('data', [[], [], []])
+import dataset
 
 
 def login():
     username = input("输入用户名:")
     password = input("输入密码:")
-    return data.login(username, password)
+    return dataset.verify(username, password)
 
 
 if __name__ == "__main__":
-    #init()
+    dataset.init()
     command = ""
 
     account = login()
