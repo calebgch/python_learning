@@ -25,7 +25,7 @@ def main():
         account = Admin('admin', 'admin')
         user_list.append(account)
     data_list[0] = user_list
-    database.save(data_list)
+    database.savedata(data_list)
 
     account = login()
     while account is None:
@@ -37,7 +37,7 @@ def main():
         if command == 'help':
             account.help()
 
-        print("command: "+command)
+        #print("command: "+command)
         account.do_command(command)
     print("exit system")
 

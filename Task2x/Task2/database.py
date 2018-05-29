@@ -8,7 +8,7 @@ course_list = []
 score_list = []
 
 
-def save(data_list):
+def savedata(data_list):
     if len(data_list) != 4:
         print("invalid parameter")
         return
@@ -16,6 +16,11 @@ def save(data_list):
     school_list = data_list[1]
     course_list = data_list[2]
     score_list = data_list[3]
+    with open('./dump/data.pk', 'wb') as f:
+        pickle.dump([user_list, school_list, course_list, score_list], f)
+
+
+def save():
     with open('./dump/data.pk', 'wb') as f:
         pickle.dump([user_list, school_list, course_list, score_list], f)
 

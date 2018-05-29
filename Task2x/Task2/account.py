@@ -3,6 +3,54 @@ from school import School
 from course import Course
 
 
+def get_user_list():
+    datalist = database.get()
+    return datalist[0]
+
+
+def get_school_list():
+    datalist = database.get()
+    return datalist[1]
+
+
+def get_course_list():
+    datalist = database.get()
+    return datalist[2]
+
+
+def get_score_list():
+    datalist = database.get()
+    return datalist[3]
+
+
+def save():
+    database.save()
+
+
+def user_exist(username):
+    user_list = get_user_list()
+    for account in user_list:
+        if account.username == username:
+            return True
+    return False
+
+
+def school_exist(school_name):
+    school_list = get_school_list()
+    for school in school_list:
+        if school.name == school_name:
+            return True
+    return False
+
+
+def course_exist(course_name, schoolname):
+    course_list = get_course_list()
+    for course in course_list:
+        if course.name == course_name and course.school == schoolname:
+            return True
+    return False
+
+
 class Account(object):
     def __init__(self, username, password, type):
         self.username = username
@@ -58,92 +106,81 @@ class Admin(Account):
         new_password = input("输入密码:")
         new_type = input("输入用户类型:")
         account = self.create_account(new_username, new_password, new_type)
-        if account is not None and self.verify_user(account):
-            datalist = database.get()
-            datalist[0].append(account)
-            database.save(datalist)
+        if account is not None:
+            user_list = get_user_list()
+            user_list.append(account)
+            save()
 
     def del_user(self):
         username = input("输入要删除的用户名:")
-        datalist = database.get()
-        user_list = datalist[0]
+        user_list = get_user_list()
         for account in user_list:
             if account.username == username:
                 user_list.remove(account)
                 print('用户删除成功')
-                database.save(datalist)
+                save()
                 return True
         print('用户删除失败')
         return False
 
     def create_account(self, username, password, type):
+        if user_exist(username):
+            print('用户创建失败：用户名已存在')
+            return None
         if type == 'Admin' or type == 'A':
             return Admin(username, password)
         elif type == 'Teacher' or type == 'T':
             school = input("输入老师所属学校:")
-            return Teacher(username, password, school)
+            if school_exist(school):
+                return Teacher(username, password, school)
         elif type == 'Student' or type == 'S':
             school = input("输入学生所属学校:")
-            return Student(username, password, school)
+            if school_exist(school):
+                return Student(username, password, school)
         else:
             return None
-
-    def verify_user(self, verify_user):
-        datalist = database.get()
-        user_list = datalist[0]
-        for account in user_list:
-            if account.username == verify_user.username:
-                print('用户验证失败，存在同名用户')
-                return False
-        return True
 
     def add_school(self):
         school_name = input("输入学校名:")
         school_addr = input("输入学校地址:")
         new_school = School(school_name, school_addr)
-        datalist = database.get()
-        school_list = datalist[3]
+        school_list = get_school_list()
         for school in school_list:
             if school.name == new_school.name:
                 print("新增学校失败，学校已存在")
                 return
         school_list.append(new_school)
-        database.save(datalist)
+        save()
 
     def del_school(self):
         school_name = input("输入需要删除的学校名:")
-        datalist = database.get()
-        school_list = datalist[3]
+        school_list = get_school_list()
         for school in school_list:
             if school.name == school_name:
                 school_list.remove(school)
-                database.save(datalist)
+                save()
                 print("学校删除成功")
                 return
         print('学校删除失败，未找到学校')
 
     def show_school(self):
-        datalist = database.get()
-        school_list = datalist[3]
+        school_list = get_school_list()
         for school in school_list:
             print(school.name, school.addr)
 
     def show_user(self):
-        datalist = database.get()
-        user_list = datalist[0]
+        user_list = get_user_list()
         for account in user_list:
             print(account.username, account.passowrd, account.type)
 
     def show_teacher(self):
-        datalist = database.get()
-        user_list = datalist[0]
+        user_list = get_user_list()
         for account in user_list:
             if account.type == 'T':
                 print(account.username, account.passowrd, account.type)
 
     def show_student(self):
-        datalist = database.get()
-        user_list = datalist[0]
+        user_list = get_user_list()
         for account in user_list:
             if account.type == 'S':
                 print(account.username, account.passowrd, account.type)
@@ -154,38 +191,35 @@ class Admin(Account):
         course_teacher = input("输入任课教师:")
         course = self.create_course(course_name, course_school, course_teacher)
         if course is not None:
-            datalist = database.get()
-            course_list = datalist[2]
+            course_list = get_course_list()
             course_list.append(course)
-            database.save(datalist)
+            save()
 
     def create_course(self, course_name, course_school, course_teacher):
-        datalist = database.get()
-        user_list = datalist[0]
-        course_list = datalist[2]
-        for course in course_list:
-            if course.name == course_name and course.school == course_school:
-                print("新增课程失败，课程已存在")
-                return None
-        for account in user_list:
-            if account.username == course_teacher:
-                return Course(course_name, course_school, course_teacher)
-        print("新增课程失败，指定的教师不存在")
-        return None
+        if not user_exist(course_teacher):
+            print("新增课程失败，指定的教师不存在")
+            return None
+        if not school_exist(course_school):
+            print("新增课程失败，指定的学校不存在")
+            return None
+        if course_exist(course_name, course_school):
+            print("新增课程失败，课程已存在")
+            return None
+        return Course(course_name, course_school, course_teacher)
 
     def del_course(self):
         course_name = input("输入要删除的课程名:")
         course_school = input("输入课程所在学校:")
-        datalist = database.get()
-        course_list = datalist[2]
+        course_list = get_course_list()
         for course in course_list:
             if course.name == course_name and course.school == course_school:
-                print("新增课程失败，课程已存在")
-                return None
+                course_list.remove(course)
+                save()
+                return
+        print('课程删除失败，没有找到对应的课程')
 
     def show_course(self):
-        datalist = database.get()
-        course_list = datalist[2]
+        course_list = get_course_list()
         for course in course_list:
             print(course.name, course.school, course.teacher)
 
@@ -202,46 +236,84 @@ class Teacher(Account):
 
     def do_command(self, command):
         if command == 'show course':
-            pass
+            self.show_course()
         elif command == 'show student':
-            pass
+            self.show_student()
         elif command == 'show score':
             pass
         elif command == 'set score':
             pass
 
     def show_course(self):
-        datalist = database.get()
-        course_list = datalist[2]
+        course_list = get_course_list()
         for course in course_list:
             if course.teacher == self.username:
                 print(course.name, course.school, course.teacher)
 
- 
-class Student(Account):
+    def show_student(self):
+        course_list = get_course_list()
+        score_list = get_score_list()
+        for course in course_list:
+            if course.teacher == self.username:
+                for score in score_list:
+                    if score.course_name == course.name and score.school == course.school:
+                        print(course.name, score.student_name)
 
+
+class Student(Account):
     def __init__(self, username, password, school):
         self.school = school
         super().__init__(username, password, 'S')
 
-    def register_class(self):
-        pass
-
-    def get_courses(self):
-        pass
-
     def do_command(self, command):
         if command == 'register course':
-            pass
+            self.register_course()
         elif command == 'quit course':
-            pass
+            self.quit_course()
         elif command == 'show course':
-            pass
+            self.show_course()
+
+    def register_course(self):
+        course_name = input("输入要报名的课程:")
+        school_name = input("输入课程所在学校:")
+        if not course_exist(course_name, school_name):
+            print('报名失败，课程不存在')
+        score = Score(course_name, school_name, self.username)
+        score_list = get_score_list()
+        score_list.append(score)
+        save()
+
+    def show_course(self):
+        score_list = get_score_list()
+        for score in score_list:
+            if score.student_name == self.username:
+                print(score.course_name, score.school, score.student_name, score.score)
+
+    def quit_course(self):
+        course_name = input("输入要退出的课程:")
+        school_name = input("输入课程所在学校:")
+        if not course_exist(course_name, school_name):
+            print('退出失败，课程不存在')
+        score_list = get_score_list()
+        for score in score_list:
+            if score.course_name == course_name and score.school == school_name and score.student_name == self.username:
+                score_list.remove(score)
+                save()
 
     def help(self):
         print('register course #报名课程\n'
               'quit course #退出课程\n'
               'show course #显示已报名课程')
 
+
+class Score(object):
+    def __init__(self, course_name, school_name, student_name):
+        self.student_name = student_name
+        self.course_name = course_name
+        self.score = 0
+        self.school = school_name
+
+    def set_score(self, score):
+        self.score = score
 
 
