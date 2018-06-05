@@ -1,6 +1,7 @@
 import database
 from school import School
 from course import Course
+from prettytable import PrettyTable
 
 
 def get_user_list():
@@ -71,11 +72,15 @@ class Admin(Account):
     def help(self):
         print('add user #添加用户\n'
               'del user #删除用户\n'
+              'show user #显示用户\n'
+              'show teacher #显示老师\n'
+              'show student #显示学生\n'        
               'add school #添加学校\n'
               'del school #删除学校\n'
+              'show school #显示学校\n'
               'add course #添加课程\n'
               'del course #删除课程\n'
-              'show user #显示用户')
+              'show course #显示课程\n')
 
     def do_command(self, command):
         if command == 'add user':
@@ -165,25 +170,33 @@ class Admin(Account):
 
     def show_school(self):
         school_list = get_school_list()
+        x = PrettyTable(["学校名称", "学校地址"])
         for school in school_list:
-            print(school.name, school.addr)
+            x.add_row([school.name, school.addr])
+        print(x)
 
     def show_user(self):
         user_list = get_user_list()
+        x = PrettyTable(["用户名", "密码", "用户类型"])
         for account in user_list:
-            print(account.username, account.passowrd, account.type)
+            x.add_row([account.username, account.passowrd, account.type])
+        print(x)
 
     def show_teacher(self):
         user_list = get_user_list()
+        x = PrettyTable(["老师名字", "密码", "所属学校"])
         for account in user_list:
             if account.type == 'T':
-                print(account.username, account.passowrd, account.type)
+                x.add_row([account.username, account.passowrd, account.school])
+        print(x)
 
     def show_student(self):
         user_list = get_user_list()
+        x = PrettyTable(["学生名字", "密码", "所属学校"])
         for account in user_list:
             if account.type == 'S':
-                print(account.username, account.passowrd, account.type)
+                x.add_row([account.username, account.passowrd, account.school])
+        print(x)
 
     def add_course(self):
         course_name = input("输入课程名:")
@@ -220,8 +233,10 @@ class Admin(Account):
 
     def show_course(self):
         course_list = get_course_list()
+        x = PrettyTable(["课程名称", "所属学校", "任课老师"])
         for course in course_list:
-            print(course.name, course.school, course.teacher)
+            x.add_row([course.name, course.school, course.teacher])
+        print(x)
 
 
 class Teacher(Account):
@@ -232,7 +247,8 @@ class Teacher(Account):
     def help(self):
         print('show course #查看教授课程\n'
               'show student #查看学生\n'
-              'show score #查看学生成绩\n')
+              'show score #查看学生成绩\n'
+              'set score #修改学生成绩')
 
     def do_command(self, command):
         if command == 'show course':
@@ -240,24 +256,38 @@ class Teacher(Account):
         elif command == 'show student':
             self.show_student()
         elif command == 'show score':
-            pass
+            self.show_student()
         elif command == 'set score':
-            pass
+            self.set_score()
 
     def show_course(self):
         course_list = get_course_list()
+        x = PrettyTable(["课程名称", "课程老师", "所属学校"])
         for course in course_list:
             if course.teacher == self.username:
-                print(course.name, course.school, course.teacher)
+                x.add_row([course.name, course.teacher, course.school])
+        print(x)
 
     def show_student(self):
         course_list = get_course_list()
         score_list = get_score_list()
+        x = PrettyTable(["学生名字", "课程名称", "分数", "任课老师"])
         for course in course_list:
             if course.teacher == self.username:
                 for score in score_list:
                     if score.course_name == course.name and score.school == course.school:
-                        print(course.name, score.student_name)
+                        x.add_row([score.student_name, course.name, score.score, course.name])
+        print(x)
+
+    def set_score(self):
+        course_name = input("输入要修改的课程:")
+        student_name = input("输入要修改的学生:")
+        new_score = input("分数:")
+        score_list = get_score_list()
+        for score in score_list:
+            if score.course_name == course_name and score.student_name == student_name:
+                score.set_score(new_score)
+        save()
 
 
 class Student(Account):
@@ -285,9 +315,11 @@ class Student(Account):
 
     def show_course(self):
         score_list = get_score_list()
+        x = PrettyTable(["课程名称", "所属学校", "课程分数", "学生名字"])
         for score in score_list:
             if score.student_name == self.username:
-                print(score.course_name, score.school, score.student_name, score.score)
+                x.add_row([score.course_name, score.school, score.score, score.student_name])
+        print(x)
 
     def quit_course(self):
         course_name = input("输入要退出的课程:")

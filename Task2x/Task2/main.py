@@ -36,9 +36,10 @@ def main():
         command = input(">>")
         if command == 'help':
             account.help()
-
-        #print("command: "+command)
-        account.do_command(command)
+        elif command == 'su':
+            account = login()
+        else:
+            account.do_command(command)
     print("exit system")
 
 
