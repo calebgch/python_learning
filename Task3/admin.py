@@ -8,14 +8,14 @@ class Admin(Account):
     """docstring for Admin"""
     def __init__(self, username, password, type):
         super().__init__(username, password, type)
-        self.command_dict['add user'] = 'add_user',
-        self.command_dict['del user'] = 'del_user',
-        self.command_dict['show user'] = 'show_user',
-        self.command_dict['add school'] = 'add_school',
-        self.command_dict['del school'] = 'del_school',
-        self.command_dict['show school'] = 'show_school',
-        self.command_dict['add course'] = 'add_course',
-        self.command_dict['del course'] = 'del_course',
+        self.command_dict['add user'] = 'add_user'
+        self.command_dict['del user'] = 'del_user'
+        self.command_dict['show user'] = 'show_user'
+        self.command_dict['add school'] = 'add_school'
+        self.command_dict['del school'] = 'del_school'
+        self.command_dict['show school'] = 'show_school'
+        self.command_dict['add course'] = 'add_course'
+        self.command_dict['del course'] = 'del_course'
         self.command_dict['show course'] = 'show_course'
 
     def help(self):

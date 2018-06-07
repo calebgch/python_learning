@@ -8,10 +8,10 @@ class Teacher(Account):
     def __init__(self, username, password, type):
         super().__init__(username, password, type)
         # command name : function name
-        self.command_dict['set score'] = 'set_score',
-        self.command_dict['show score'] = 'show_student',
-        self.command_dict['show student'] = 'show_student',
-        self.command_dict['show course'] = 'show_course',
+        self.command_dict['set score'] = 'set_score'
+        self.command_dict['show score'] = 'show_student'
+        self.command_dict['show student'] = 'show_student'
+        self.command_dict['show course'] = 'show_course'
         self.command_dict['show school'] = 'show_school'
 
     def help(self):
